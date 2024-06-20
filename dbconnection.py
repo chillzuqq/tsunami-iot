@@ -38,29 +38,46 @@ def main_loop():
             cursor = connection.cursor()
             show_data = "SELECT * FROM tempsensors"
             cursor.execute(show_data)
-
             results = cursor.fetchone()
-            if results is None:
-                print("No data found.")
-            else:
-                # Check results and print appropriate messages
-                if results[0] == 0 and results[1] == 0:
-                    print("All clear.")
-                elif results[0] == 1 and results[1] == 0:
-                    print("Early warning")
-                    testwa.sendMSG("+6281319362661", "Early Warning")
-                elif results[0] == 0 and results[1] == 1:
-                    print("Warning")
-                elif results[0] == 1 and results[1] == 1:
-                    print("Run to high place immediately")
+
+            # Ensure that all data is read before executing another query
+            cursor.fetchall()  # This will clear any remaining results
+            cursor.close()  # Close the first cursor
+
+            msgcursor = connection.cursor()
+            show_msg = "SELECT * FROM warn_msg"
+            msgcursor.execute(show_msg)
+            msg = msgcursor.fetchall()
+            msgcursor.close()  # Close the second cursor
+            
+            phonecursor = connection.cursor()
+            show_phone = "SELECT * FROM nomor_penerima"
+            phonecursor.execute(show_phone)
+            phone = phonecursor.fetchall()
+            phonecursor.close()  # Close the second cursor
+
+            for i in phone:
+                if results is None:
+                    print("No data found.")
+                else:
+                    # Check results and print appropriate messages
+                    if results[0] == 0 and results[1] == 0:
+                        print("All clear.")
+                    elif results[0] == 1 and results[1] == 0:
+                        print(msg[0][1])
+                        testwa.sendMSG(i[1], msg[0][1])
+                    elif results[0] == 0 and results[1] == 1:
+                        print(msg[1][1])
+                        testwa.sendMSG(i[1], msg[1][1])
+                    elif results[0] == 1 and results[1] == 1:
+                        print(msg[2][1])
+                        testwa.sendMSG(i[1], msg[2][1])
 
         except Error as e:
             print(f"Error during database operation: {e}")
 
         finally:
-            # Ensure the cursor and connection are closed
-            if cursor:
-                cursor.close()
+            # Ensure the connection is closed
             close_connection(connection)
 
         # Sleep for a defined interval before the next iteration

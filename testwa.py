@@ -9,7 +9,7 @@ arr = ["+6281319362661", "+6281271524551", "+6281251700170", "+6285732053557"]
 
 
 def sendMSG(number, msg):
-    pywhatkit.sendwhatmsg_instantly(number, msg, 7)
+    pywhatkit.sendwhatmsg_instantly(number, msg, 10)
     # time.sleep(1)
     pyautogui.click()
     # time.sleep(1)

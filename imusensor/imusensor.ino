@@ -1,5 +1,7 @@
 #include <Wire.h>
 #include <MPU6050_tockn.h>
+#include "conn.h"
+#include "send_data.h"
 
 MPU6050 mpu6050(Wire);
 
@@ -8,6 +10,8 @@ void setup() {
   Wire.begin();
   mpu6050.begin();
   mpu6050.calcGyroOffsets(true);
+
+  connectWiFi();
 }
 
 void loop() {
@@ -44,15 +48,20 @@ void loop() {
   
   if (totalAcc > 2.0 || totalGyro > 200) {
     Serial.println("Warning: Berbahaya!");
+    send_data("2", "1");
   } else if (totalAcc > 1.5 || totalGyro > 150) {
     Serial.println("Ombak Tinggi");
+    send_data("2","0");
   } else if (totalAcc > 1.0 || totalGyro > 100) {
     Serial.println("Ombak Sedang");
+    send_data("2","0");
   } else if (totalAcc > 0.5 || totalGyro > 50) {
     Serial.println("Ombak Kecil");
+    send_data("2","0");
   } else {
     Serial.println("Lagi damai nich");
+    send_data("2","0");
   }
   
-  delay(100);
+  delay(2000);
 }
