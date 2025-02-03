@@ -33,9 +33,9 @@ A low-cost system using an IMU sensor and water level sensor to detect tsunamis.
 
 ## Code
 
-- `imu_sensor.ino`: IMU data reading.
-- `water_level_sensor.ino`: Water level data reading.
-- `send_alert.py`: Sends WhatsApp alerts.
+- `imusensor.ino`: IMU data reading.
+- `waterlevel_sensor.ino`: Water level data reading.
+- `dbconnection.py`: Sends WhatsApp alerts.
 
 ## Example Alert
 
